@@ -1,0 +1,665 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
+
+# pool:
+#   vmImage: VMTSTAUTPRD003
+
+# pool:
+#   vmImage: windows-latest
+
+parameters:
+- name: TESTPLANTYPE
+  displayName: Select Test Plan
+  type: string
+  default: IPAD
+  values:
+  - DESKTOP
+  - IPAD
+- name: testDataOption
+  displayName: Enter Test-Data
+  type: string
+  default: excel
+  values:
+  # - pipeline
+  - excel
+
+- name: testType
+  displayName: Enter Test-Type
+  type: string
+  default: suite
+  values:
+  - suite
+  - testCase
+- name: suiteNames
+  displayName: Enter Suite Names / Test Case ID (eg- MDRequest, OtherMDRequest, PartnerMDRequest  / ' xxx , yyy ' )
+  type: string
+  default: MDRequest 
+
+- name: Romania
+  displayName: Romania
+  type: boolean
+  default: false 
+
+
+- name: Slovakia
+  displayName: Slovakia
+  type: boolean
+  default: false
+- name: Czech_Republic
+  displayName: Czech Republic
+  type: boolean
+  default: false
+- name: Slovenia
+  displayName: Slovenia
+  type: boolean
+  default: false
+- name: Croatia
+  displayName: Croatia
+  type: boolean
+  default: false 
+- name: Bosnia_and_Herzegovina
+  displayName: Bosnia and Herzegovina
+  type: boolean
+  default: false
+- name: Northern_Ireland
+  displayName: Northern Ireland
+  type: boolean
+  default: false
+- name: Switzerland
+  displayName: Switzerland
+  type: boolean
+  default: false
+- name: Republic_Of_Ireland
+  displayName: Republic Of Ireland
+  type: boolean
+  default: false
+- name: Armenia
+  displayName: Armenia
+  type: boolean
+  default: false 
+- name: Bulgaria
+  displayName: Bulgaria
+  type: boolean
+  default: false 
+- name: Moldova
+  displayName: Moldova
+  type: boolean
+  default: false 
+- name: Nigeria
+  displayName: Nigeria
+  type: boolean
+  default: true 
+- name: North_Macedonia
+  displayName: North_Macedonia
+  type: boolean
+  default: false 
+- name: Ukraine
+  displayName: Ukraine
+  type: boolean
+  default: false 
+- name: Austria
+  displayName: Austria
+  type: boolean
+  default: false 
+- name: Poland
+  displayName: Poland
+  type: boolean
+  default: false 
+- name: Latvia
+  displayName: Latvia
+  type: boolean
+  default: false 
+- name: Lithuania
+  displayName: Lithuania
+  type: boolean
+  default: false 
+- name: Estonia
+  displayName: Estonia
+  type: boolean
+  default: false 
+- name: Serbia
+  displayName: Serbia
+  type: boolean
+  default: false 
+- name: Montenegro
+  displayName: Montenegro
+  type: boolean
+  default: false 
+- name: Hungary
+  displayName: Hungary
+  type: boolean
+  default: false 
+- name: Italy
+  displayName: Italy
+  type: boolean
+  default: false 
+- name: Greece
+  displayName: Greece
+  type: boolean
+  default: false 
+- name: Cyprus
+  displayName: Cyprus
+  type: boolean
+  default: false 
+- name: Kosovo
+  displayName: Kosovo
+  type: boolean
+  default: false 
+stages:
+- ${{ if eq(parameters.Romania, true) }}:
+  - stage: Run_Romania
+    displayName: 'Run tests for Romania'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Romania
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}        
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true        
+
+- ${{ if eq(parameters.Czech_Republic, true) }}:
+  - stage: Run_Czech_Republic
+    displayName: 'Run tests for Czech Republic'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Czech_Republic
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true
+
+- ${{ if eq(parameters.Slovakia, true) }}:
+  - stage: Run_Slovakia
+    displayName: 'Run tests for Slovakia'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Slovakia
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true  
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true
+
+- ${{ if eq(parameters.Bosnia_and_Herzegovina, true) }}:
+  - stage: Run_Bosnia_and_Herzegovina
+    displayName: 'Run tests for Bosnia and Herzegovina'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Bosnia_and_Herzegovina
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true 
+
+- ${{ if eq(parameters.Croatia, true) }}:
+  - stage: Run_Croatia
+    displayName: 'Run tests for Croatia'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Croatia
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true
+
+- ${{ if eq(parameters.Slovenia, true) }}:
+  - stage: Run_Slovenia
+    displayName: 'Run tests for Slovenia'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Slovenia
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true 
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true
+
+- ${{ if eq(parameters.Switzerland, true) }}:
+  - stage: Run_Switzerland
+    displayName: 'Run tests for Switzerland'
+    condition: succeededOrFailed()
+    dependsOn: []    
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Switzerland
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{ parameters.testDataOption }}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true
+
+- ${{ if eq(parameters.Republic_Of_Ireland, true) }}:
+  - stage: Run_Republic_Of_Ireland
+    displayName: 'Run tests for Republic Of Ireland'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Republic_Of_Ireland
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true
+
+- ${{ if eq(parameters.Northern_Ireland, true) }}:
+  - stage: Run_Northern_Ireland
+    displayName: 'Run tests for Northern Ireland'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Northern_Ireland
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true
+
+- ${{ if eq(parameters.Armenia, true) }}:
+  - stage: Run_Armenia
+    displayName: 'Run tests for Armenia'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Armenia
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true
+
+- ${{ if eq(parameters.Bulgaria, true) }}:
+  - stage: Run_Bulgaria
+    displayName: 'Run tests for Bulgaria'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Bulgaria
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true
+
+- ${{ if eq(parameters.Moldova, true) }}:
+  - stage: Run_Moldova
+    displayName: 'Run tests for Moldova'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Moldova
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true
+
+- ${{ if eq(parameters.Nigeria, true) }}:
+  - stage: Run_Nigeria
+    displayName: 'Run tests for Nigeria'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Nigeria
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true
+
+- ${{ if eq(parameters.North_Macedonia, true) }}:
+  - stage: Run_North_Macedonia
+    displayName: 'Run tests for North_Macedonia'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: North_Macedonia
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true  
+
+- ${{ if eq(parameters.Ukraine, true) }}:
+  - stage: Run_Ukraine
+    displayName: 'Run tests for Ukraine'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Ukraine
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true  
+
+- ${{ if eq(parameters.Austria, true) }}:
+  - stage: Run_Austria
+    displayName: 'Run tests for Austria'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Austria
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true  
+
+- ${{ if eq(parameters.Poland, true) }}:
+  - stage: Run_Poland
+    displayName: 'Run tests for Poland'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Poland
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true  
+
+- ${{ if eq(parameters.Latvia, true) }}:
+  - stage: Run_Latvia
+    displayName: 'Run tests for Latvia'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Latvia
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true  
+
+- ${{ if eq(parameters.Lithuania, true) }}:
+  - stage: Run_Lithuania
+    displayName: 'Run tests for Lithuania'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Lithuania
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true  
+
+- ${{ if eq(parameters.Estonia, true) }}:
+  - stage: Run_Estonia
+    displayName: 'Run tests for Estonia'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Estonia
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true  
+
+- ${{ if eq(parameters.Serbia, true) }}:
+  - stage: Run_Serbia
+    displayName: 'Run tests for Serbia'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Serbia
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true  
+
+- ${{ if eq(parameters.Montenegro, true) }}:
+  - stage: Run_Montenegro
+    displayName: 'Run tests for Montenegro'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Montenegro
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true  
+
+- ${{ if eq(parameters.Hungary, true) }}:
+  - stage: Run_Hungary
+    displayName: 'Run tests for Hungary'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Hungary
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true  
+
+- ${{ if eq(parameters.Italy, true) }}:
+  - stage: Run_Italy
+    displayName: 'Run tests for Italy'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Italy
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true  
+
+- ${{ if eq(parameters.Greece, true) }}:
+  - stage: Run_Greece
+    displayName: 'Run tests for Greece'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Greece
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true  
+
+- ${{ if eq(parameters.Cyprus, true) }}:
+  - stage: Run_Cyprus
+    displayName: 'Run tests for Cyprus'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Cyprus
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true  
+
+- ${{ if eq(parameters.Kosovo, true) }}:
+  - stage: Run_Kosovo
+    displayName: 'Run tests for Kosovo'
+    condition: succeededOrFailed()
+    dependsOn: []
+    jobs:
+    - template: countryStagesDecouple.yml
+      parameters:
+        country: Kosovo
+        type: ${{ parameters.testType }}
+        TESTPLANTYPE: ${{ parameters.TESTPLANTYPE }}
+        testData: ${{parameters.testDataOption}}
+        suiteorTest: ${{ parameters.suiteNames }}
+        REQUIREDD365API: true
+        REQUIREDD365: false
+        CHECKD365COMPLETED: false
+        REQUIREDSAP: true
+        REQUIREDMDG: true  

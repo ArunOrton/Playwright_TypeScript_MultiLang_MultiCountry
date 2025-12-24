@@ -1,0 +1,125 @@
+parameters:
+- name: country
+  type: string
+- name: type
+  type: string
+- name: suiteorTest
+  type: string
+# - name: DIRECT_ACCOUNTNUMBERS
+#   type: string
+# - name: INDIRECT_ACCOUNTNUMBERS
+#   type: string
+- name: REQUIREDD365API
+  type: string
+- name: REQUIREDD365
+  type: string
+# - name: CHECKD365COMPLETED
+#   type: string
+- name: REQUIREDSAP
+  type: string
+- name: REQUIREDMDG
+  type: string 
+- name: TESTDATA
+  type: string     
+
+jobs:
+
+- ${{ if and(eq(parameters.type, 'suite'), eq(parameters.testData, 'pipeline')) }}:  
+  - ${{ each suiteName in split(parameters.suiteorTest, ', ') }}:    
+      - job: FunctionalTest_${{ parameters.country }}_Suite_${{ suiteName }}
+        timeoutInMinutes: 600    
+        pool:
+          name: tecs-test-automation
+          demands:
+            - includeCCCPipeline -equals true           
+        steps:
+        - template: testSuiteSteps.yml
+          parameters:
+            testName: ${{ suiteName }}            
+            # country: ${{ replace(parameters.country, '_', ' ') }}            
+            country: ${{ parameters.country }}
+            TESTDATA: pipeline
+            TESTPLANTYPE: 'ObsoleteForE2E'
+            # DIRECT_ACCOUNTNUMBERS: ${{ parameters.DIRECT_ACCOUNTNUMBERS }}
+            # INDIRECT_ACCOUNTNUMBERS: ${{ parameters.INDIRECT_ACCOUNTNUMBERS }}
+            REQUIREDD365API: ${{ parameters.REQUIREDD365API }}
+            REQUIREDD365: ${{ parameters.REQUIREDD365 }}
+            # CHECKD365COMPLETED: ${{ parameters.CHECKD365COMPLETED }}
+            REQUIREDSAP: ${{ parameters.REQUIREDSAP }}
+            REQUIREDMDG: ${{ parameters.REQUIREDMDG }}
+            SINGLERECORDEXECUTION: ${{ parameters.SINGLERECORDEXECUTION }}
+
+- ${{ if and(eq(parameters.type, 'suite'), eq(parameters.testData, 'excel')) }}:  
+  - ${{ each suiteName in split(parameters.suiteorTest, ', ') }}:    
+      - job: FunctionalTest_${{ parameters.country }}_Suite_${{ suiteName }}
+        timeoutInMinutes: 600    
+        pool:
+          name: tecs-test-automation          
+          demands:
+            - includeCCCPipeline -equals true           
+        steps:
+        - template: testSuiteSteps.yml
+          parameters:
+            testName: ${{ suiteName }}            
+            # country: ${{ replace(parameters.country, '_', ' ') }}            
+            country: ${{ parameters.country }}
+            TESTPLANTYPE: 'ObsoleteForE2E'
+            TESTDATA: excel
+            # DIRECT_ACCOUNTNUMBERS: ${{ parameters.DIRECT_ACCOUNTNUMBERS }}
+            # INDIRECT_ACCOUNTNUMBERS: ${{ parameters.INDIRECT_ACCOUNTNUMBERS }}
+            REQUIREDD365API: ${{ parameters.REQUIREDD365API }}
+            REQUIREDD365: ${{ parameters.REQUIREDD365 }}
+            # CHECKD365COMPLETED: ${{ parameters.CHECKD365COMPLETED }}
+            REQUIREDSAP: ${{ parameters.REQUIREDSAP }}
+            REQUIREDMDG: ${{ parameters.REQUIREDMDG }}
+            SINGLERECORDEXECUTION: ${{ parameters.SINGLERECORDEXECUTION }}
+
+- ${{ if and(eq(parameters.type, 'testCase'), eq(parameters.testData, 'pipeline')) }}:    
+    - job: FunctionalTest_${{ parameters.country }}_Test_TestCaseExecution
+      timeoutInMinutes: 600    
+      pool:
+        name: tecs-test-automation
+        demands:
+          - includeCCCPipeline -equals true           
+      steps:
+      - template: testcaseSteps.yml
+        parameters:
+          testName: TestCaseExecution          
+          # country: ${{ replace(parameters.country, '_', ' ') }}
+          TESTCASEID: ${{ parameters.suiteorTest }}
+          TESTPLANTYPE: 'ObsoleteForE2E'
+          TESTDATA: pipeline
+          country: ${{ parameters.country }}
+          # DIRECT_ACCOUNTNUMBERS: ${{ parameters.DIRECT_ACCOUNTNUMBERS }}
+          # INDIRECT_ACCOUNTNUMBERS: ${{ parameters.INDIRECT_ACCOUNTNUMBERS }}
+          REQUIREDD365API: ${{ parameters.REQUIREDD365API }}
+          REQUIREDD365: ${{ parameters.REQUIREDD365 }}
+          # CHECKD365COMPLETED: ${{ parameters.CHECKD365COMPLETED }}
+          REQUIREDSAP: ${{ parameters.REQUIREDSAP }}
+          REQUIREDMDG: ${{ parameters.REQUIREDMDG }}
+          SINGLERECORDEXECUTION: ${{ parameters.SINGLERECORDEXECUTION }}
+
+- ${{ if and(eq(parameters.type, 'testCase'), eq(parameters.testData, 'excel')) }}:    
+    - job: FunctionalTest_${{ parameters.country }}_Test_TestCaseExecution
+      timeoutInMinutes: 600    
+      pool:
+        name: tecs-test-automation        
+        demands:
+          - includeCCCPipeline -equals true           
+      steps:
+      - template: testcaseSteps.yml
+        parameters:
+          testName: TestCaseExecution          
+          # country: ${{ replace(parameters.country, '_', ' ') }}
+          TESTCASEID: ${{ parameters.suiteorTest }}
+          TESTDATA: excel
+          TESTPLANTYPE: 'ObsoleteForE2E'
+          country: ${{ parameters.country }}
+          # DIRECT_ACCOUNTNUMBERS: ${{ parameters.DIRECT_ACCOUNTNUMBERS }}
+          # INDIRECT_ACCOUNTNUMBERS: ${{ parameters.INDIRECT_ACCOUNTNUMBERS }}
+          REQUIREDD365API: ${{ parameters.REQUIREDD365API }}
+          REQUIREDD365: ${{ parameters.REQUIREDD365 }}
+          # CHECKD365COMPLETED: ${{ parameters.CHECKD365COMPLETED }}
+          REQUIREDSAP: ${{ parameters.REQUIREDSAP }}
+          REQUIREDMDG: ${{ parameters.REQUIREDMDG }}
+          SINGLERECORDEXECUTION: ${{ parameters.SINGLERECORDEXECUTION }}

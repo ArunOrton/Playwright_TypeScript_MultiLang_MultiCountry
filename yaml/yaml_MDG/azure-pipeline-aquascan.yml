@@ -1,0 +1,25 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger: none
+
+resources:
+  repositories:
+  - repository: CeTemplates
+    type: git
+    name: CCH SAFe Portfolio/dtso-ea-blueprints
+    ref: release/next-v1
+
+variables:
+  - template: '/blueprints/variables/variables-global.yml@CeTemplates'
+ 
+stages:
+  - stage: ContinuousIntegration
+    displayName: Continuous Integration (CI)
+    jobs:
+    # security scan job
+    - template: '/templates/jobs/job-aqua-security-scan.yml@CeTemplates'
+      parameters:
+        verbose: false 

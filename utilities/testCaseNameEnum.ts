@@ -1,0 +1,56 @@
+export const testName = {
+  createCrWithDistributionStep: 'CreateCRWithDistributionStep',
+  createCrDirectly: 'CreateCRDirectly',
+  createCrIndirectInMdg: 'CreateCRIndirectInMdg',
+  createCrVendingWithDistributionStep: 'CreateCrVendingWithDistributionStep',
+  createCrDtsInMdg: 'CreateCrDtsInMdg',
+
+
+
+
+  GLNNumber: 'GLNNumber',
+  UpdateContactRole: 'UpdateContactRole',
+  CreateContactRole: 'CreateContactRole',
+  DeleteContactRole: 'DeleteContactRole',
+  DeliveryPostalCode: 'PostalCode',
+  UnloadingPointUpdate: 'UnloadingPointUpdate',
+  UnloadingPointCreate: 'UnloadingPointCreate',
+  UpdateOrderBlock: 'UpdateOrderBlock',
+  CreatePartnerDirect: 'CreatePartnerDirect',
+  UpdatePartnerDirect: 'UpdatePartnerDirect',
+  DeletePartnerDirect: 'DeletePartnerDirect',
+  CreatePartnerInDirect: 'CreatePartnerInDirect',
+  UpdatePartnerInDirect: 'UpdatePartnerInDirect',
+  DeletePartnerInDirect: 'DeletePartnerInDirect',
+  CreateBusinessAppointments: 'CreateBusinessAppointments',
+  UpdateATypeBusinessAppointments: 'UpdateATypeBusinessAppointments',
+  UpdateBTypeBusinessAppointments: 'UpdateBTypeBusinessAppointments',
+  UpdateCTypeBusinessAppointments: 'UpdateCTypeBusinessAppointments',
+  UpdateWTypeBusinessAppointments: 'UpdateWTypeBusinessAppointments',
+  UpdateUTypeBusinessAppointments: 'UpdateUTypeBusinessAppointments',
+  UpdateVTypeBusinessAppointments: 'UpdateVTypeBusinessAppointments',
+  UpdateZTypeBusinessAppointments: 'UpdateZTypeBusinessAppointments',
+  RTMApprovalOrReject: 'RTMApprovalOrReject',
+  UpdateHierarchy: 'UpdateHierarchy',
+  BlockingFields: 'BlockingFields',
+
+  BillingNameVat: 'BillingNameVatFields',
+  UpdateVatField: 'UpdateVatField',
+  CustGrp4DtoI: 'CustGrp4DirectToIndirect',
+  CustGrp4ItoD: 'CustGrp4IndirectToDirect',
+  ContactNonWebUser: 'ContactNonWebUser',
+
+  CreateBpterritoryAssignment: 'CreateBpterritoryAssignment',
+  UpdateBpterritoryAssignment: 'UpdateBpterritoryAssignment',
+  DeleteBpterritoryAssignment: 'DeleteBpterritoryAssignment',
+  CreateCustomerMarketAttribute: 'CreateCustomerMarketAttribute',
+  UpdateCustomerMarketAttribute: 'UpdateCustomerMarketAttribute',
+  DeleteCustomerMarketAttribute: 'DeleteCustomerMarketAttribute',
+  UpdateUnloadingPoint: 'UpdateUnloadingPoint',
+  DeleteBusinessAppointment: 'DeleteBusinessAppointment',
+
+  CorrespondenceAddressUpdate: 'UpdateCorrespondenceAddress',
+  CreateBankAccount: 'CreateBankAccount',
+  DeleteBankAccount: 'DeleteBankAccount',
+
+}

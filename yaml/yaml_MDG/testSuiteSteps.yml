@@ -1,0 +1,221 @@
+parameters:
+- name: testName
+  type: string
+- name: country
+  type: string
+- name: TESTPLANTYPE
+  type: string
+- name: REQUIREDD365API
+  type: string
+- name: REQUIREDD365
+#   type: string
+# - name: CHECKD365COMPLETED
+  type: string
+- name: REQUIREDSAP
+  type: string
+- name: REQUIREDMDG
+  type: string
+- name: SINGLERECORDEXECUTION
+  type: string    
+- name: TESTDATA
+  type: string     
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '18.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install --omit=dev
+  displayName: 'Install dependencies'
+
+- script: |
+    npx playwright install
+  displayName: 'Install Playwright'
+
+# - script: |       
+#     echo "Pipeline.Workspace: $(Pipeline.Workspace)"    
+#   displayName: 'Print Pipeline.Workspace'
+
+# - script: |       
+#    echo "System.DefaultWorkingDirectory: $(System.DefaultWorkingDirectory)"
+#   displayName: 'Print System.DefaultWorkingDirectory'
+
+- script: |
+    npm run ${{ parameters.testName }}
+    
+  env:
+    AZURE_TOKEN: $(System.AccessToken)
+    CI: 'true'
+    COUNTRY: ${{ parameters.country }}
+    # DIRECT_ACCOUNTNUMBERS: ${{ parameters.DIRECT_ACCOUNTNUMBERS }}
+    # INDIRECT_ACCOUNTNUMBERS: ${{ parameters.INDIRECT_ACCOUNTNUMBERS }}
+    REQUIREDD365API: ${{ parameters.REQUIREDD365API }}
+    REQUIREDD365: ${{ parameters.REQUIREDD365 }}
+    # CHECKD365COMPLETED: ${{ parameters.CHECKD365COMPLETED }}
+    REQUIREDSAP: ${{ parameters.REQUIREDSAP }}
+    REQUIREDMDG: ${{ parameters.REQUIREDMDG }}
+    SINGLERECORDEXECUTION: ${{ parameters.SINGLERECORDEXECUTION }}
+    # #LANGUAGE: $(LANGUAGE)
+    # PLAYWRIGHT_SERVICE_ACCESS_TOKEN: $(PLAYWRIGHT_SERVICE_ACCESS_TOKEN)  # Set Playwright Service Access Token
+    # PLAYWRIGHT_SERVICE_URL: $(PLAYWRIGHT_SERVICE_URL)  # Set Playwright Service URL
+  displayName: 'Run Suite: ${{ parameters.country }} ${{ parameters.testName }}'
+
+- script: |
+    npm run teardown
+  displayName: 'Run Teardown Script'
+  condition: always()
+
+- task: PublishTestResults@2
+  displayName: 'Publish test results'
+  inputs:
+    searchFolder: 'test-results'
+    testResultsFormat: 'JUnit'
+    testResultsFiles: 'e2e-junit-results.xml'
+    testRunTitle: '${{ parameters.country }}_JUnit_TestResults_$(Build.BuildId)'
+    mergeTestResults: true
+    failTaskOnFailedTests: false
+  condition: succeededOrFailed()
+
+# - task: PublishAllureReport@1
+#   displayName: 'Publish Allure Report'
+#   inputs:
+#     testResultsDir: '$(Pipeline.Workspace)\s\allure-results'
+#     reportName: 'Allure Report - ${{ parameters.country }} - ${{ parameters.testName }}'
+#   condition: succeededOrFailed()
+#   continueOnError: true
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Pipeline.Workspace)\s\playwright-report'    
+    artifact: 'playwright-report-${{ parameters.country }}-${{ parameters.testName }}-$(Build.BuildId)'
+    publishLocation: 'pipeline'
+  condition: succeededOrFailed()
+  continueOnError: true
+  
+- task: PowerShell@2
+  displayName: 'Send Status to MS Teams Group'
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Power Automate Webhook URL
+      $flowUrl = "$(WEB_HOOK)"
+      [xml]$results = Get-Content -Path "$(System.DefaultWorkingDirectory)\test-results\e2e-junit-results.xml"
+
+      $totalTests = 0
+      $passedTests = 0
+      $failedTests = 0
+      $skippedTests = 0
+      $totalTime = 0
+
+      foreach ($suite in $results.testsuites.testsuite) {
+          $totalTests += [int]$suite.tests
+          $failedTests += [int]$suite.failures
+          $skippedTests += [int]$suite.skipped
+          $totalTime += [double]$suite.time
+
+          foreach ($testcase in $suite.testcase) {
+              if ($testcase.failure -eq $null -and $testcase.skipped -eq $null) {
+                  $passedTests++
+              }
+          }
+      }
+
+      $status = if ($failedTests -eq 0) { "Succeeded" } else { "Failed" }
+      $additionalInfo = "Pipeline completed successfully."
+      $organizationUrl = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
+      $projectName = $env:SYSTEM_TEAMPROJECT
+      $buildId = $env:BUILD_BUILDID
+      $triggerReason = $env:BUILD_REASON
+      $triggeredBy = $env:BUILD_REQUESTEDFOR
+      $testSummaryUrl = "${organizationUrl}${projectName}/_build/results?buildId=${buildId}&view=ms.vss-test-web.build-test-results-tab"
+      $executionTime = [math]::Round($totalTime / 60, 2)
+
+      $message = @"
+      **Playwright Automation - D365 MDG ${{ parameters.testName }} Test Results**:`n
+      **Ran for Country**: ${{ parameters.country }}`n
+      **Build ID**: $buildId`n
+      **Total Tests**: $totalTests`n
+      **Passed Tests**: $passedTests`n
+      **Failed Tests**: $failedTests`n
+      **Skipped Tests**: $skippedTests`n
+      **Trigger Reason**: $triggerReason`n
+      **Triggered By**: $triggeredBy`n
+      **Total Test Execution Time**: $executionTime mins`n
+      "@
+
+      # Construct the Adaptive Card
+      $body = @{
+        Status = $status
+        Message = $message
+        ViewSummary = $testSummaryUrl
+        attachments = @(
+          @{
+            contentType = "application/vnd.microsoft.card.adaptive"
+            content = @{
+              type = "AdaptiveCard"
+              version = "1.2"
+              body = @(
+                @{
+                  type = "TextBlock"
+                  text = "Test Results"
+                  weight = "Bolder"
+                  size = "Medium"
+                },
+                @{
+                  type = "FactSet"
+                  facts = @(
+                    @{
+                      title = "Country"
+                      value = "${{ parameters.country }}"
+                    },
+                    @{
+                      title = "Total Tests:"
+                      value = $totalTests
+                    },
+                    @{
+                      title = "Passed Tests:"
+                      value = $passedTests
+                    },
+                    @{
+                      title = "Failed Tests:"
+                      value = $failedTests
+                    },
+                    @{
+                      title = "Skipped Tests:"
+                      value = $skippedTests
+                    },
+                    @{
+                      title = "Total Test execution Time (mins)"
+                      value = [math]::Round($totalTime/60, 2)
+                    },
+                    @{
+                      title = "Triggered Reason"
+                      value = $triggerReason
+                    },
+                    @{
+                      title = "Triggered By (Name)"
+                      value = $triggeredBy
+                    }
+                  )
+                }
+              )
+              actions = @(
+                @{
+                  type = "Action.OpenUrl"
+                  title = "View Details"
+                  url = "https://example.com/test-results"
+                }
+              )
+            }
+          }
+        )
+      } | ConvertTo-Json -Depth 10
+
+      # Send the HTTP POST request to Power Automate
+      Invoke-RestMethod -Uri $flowUrl -Method Post -ContentType 'application/json' -Body $body
+      Write-Host "Test results sent to Power Automate"
+  condition: succeededOrFailed()
+
+
